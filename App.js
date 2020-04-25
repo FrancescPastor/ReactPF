@@ -1,11 +1,18 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-
+import { NavigationContainer } from '@react-navigation/native'; 
+import { createStackNavigator } from '@react-navigation/stack'; 
+import {MapaView} from './App/views/MapaView';
+import {InteresView} from './App/views/InteresView';
+const Stack = createStackNavigator();
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
+    <NavigationContainer>
+       <Stack.Navigator initialRouteName="Map">
+       <Stack.Screen name="Map" component={MapaView} />
+       <Stack.Screen name="LlocInteres" component={InteresView} />
+       </Stack.Navigator>
+      </NavigationContainer>
   );
 }
 
