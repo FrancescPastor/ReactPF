@@ -27,11 +27,7 @@ export class CameraView extends React.Component {
     takePicture = async () => {
         if (this.camera) {
             let photo = await this.camera.takePictureAsync();
-            db.transaction(tx => {
-                tx.executeSql("insert into fotos (uri, idLocals) values (?, ?)", [photo.uri, this.state.id]);
-                console.log(this.state.id);
-                console.log(photo.uri);
-            });
+             console.log(photo.uri);
         }
     }
 

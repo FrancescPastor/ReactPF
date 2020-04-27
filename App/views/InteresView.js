@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, View,Button, Image } from 'react-native';
-import * as SQLite from 'expo-sqlite'; //Importar SQLite
+import * as SQLite from 'expo-sqlite'; 
 
 
-const db = SQLite.openDatabase("db.db"); //Llamada a la base de datos
+const db = SQLite.openDatabase("db.db"); 
 
 export class InteresView extends React.Component {
     constructor(props) {
@@ -20,31 +20,31 @@ export class InteresView extends React.Component {
     componentDidMount() {
         db.transaction(tx => {
             tx.executeSql("select nom, fotoDesc, direccio from puntsInteres where id=?", [this.state.id], (tx,results) => {
-                let tempName = "";
-                let tempImg = "";
-                let tempDir = "";
+                let nomLocal = "";
+                let imgLocal = "";
+                let direccioLocal = "";
                 for(let i=0; i < results.rows.length; i++){
-                    tempName = results.rows.item(i).nom;
-                    tempImg = results.rows.item(i).fotoDesc;
-                    tempDir = results.rows.item(i).direccio;
+                    nomLocal = results.rows.item(i).nom;
+                    imgLocal = results.rows.item(i).fotoDesc;
+                    direccioLocal = results.rows.item(i).direccio;
                 }
-                this.setState({ nom: tempName, fotoDesc: tempImg, direccio: tempDir }); //Pone el state de los datos con la info de la BD
+                this.setState({ nom: nomLocal, fotoDesc: imgLocal, direccio: direccioLocal }); 
             });
         });
         db.transaction(tx => {
            
             tx.executeSql("select fotoUrl from imatgesInteres where idLlocs=?", [this.state.id], (tx,results) => {
-                let temp = [];   
+                let totesImatges = [];   
                 for(let i=0; i < results.rows.length; i++){ 
-                    temp.push(results.rows.item(i));
+                    totesImatges.push(results.rows.item(i));
                 }
-                console.log(temp);
-                this.setState({ imatge: temp, }); 
+                console.log(totesImatges);
+                this.setState({ imatge: totesImatges, }); 
             });
         });
     }
    
-    seleccionImagen(im) {
+    agafaImatge(im) {
         const imatgesMostrar = {
             'kebabPak': require('../../assets/kebabPak.jpeg'),
             'imgPakCatalunya': require('../../assets/imgPakCatalunya.jpg'),
@@ -64,16 +64,16 @@ export class InteresView extends React.Component {
 
     render() {        
         return(
-            <View style={styles.container}>
-                <Image source={this.seleccionImagen(this.state.fotoDesc)} style={styles.imatgeTitol} />
+            <View style={styles.tot}>
+                <Image source={this.agafaImatge(this.state.fotoDesc)} style={styles.imatgeTitol} />
                 <Text style={styles.title}>{this.state.nom}</Text> 
-                <Text style={styles.dir}>{this.state.direccio}</Text>                         
+                <Text style={styles.estilDireccio}>{this.state.direccio}</Text>                         
                
-                <View style={styles.fotoView}>
-                    <Text style={styles.fotoTitle}>Fotos del punto:</Text>
-                    <View style={styles.imgView}>
+                <View style={styles.estilImatge}>
+                    <Text style={styles.estilTitol}>Fotos del punto:</Text>
+                    <View style={styles.estilImatgevista}>
                     {this.state.imatge.map(img => (
-                        <Image key={img.fotoUrl} style={styles.fotoImg} source={this.seleccionImagen(img.fotoUrl)} />
+                        <Image key={img.fotoUrl} style={styles.imatgeEStil} source={this.agafaImatge(img.fotoUrl)} />
                     ))}
                     </View>
                 </View>
@@ -95,6 +95,7 @@ export class InteresView extends React.Component {
 }
 
 const styles = StyleSheet.create({
+
     imatgeTitol: {
         width: 300,
         height: 120,
@@ -107,16 +108,10 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center"
     },
-    container: {
+    tot: {
         flex: 1,
         backgroundColor: '#ECFCFB',
         width: '100%',
-    },
-    icons: {
-        color: '#333333',
-        marginHorizontal: 370,
-        marginTop: 5,
-        marginBottom: 15,
     },
     title: {
         fontSize: 30,
@@ -127,25 +122,25 @@ const styles = StyleSheet.create({
         includeFontPadding: true,
         textAlign: 'center',
     },
-    dir: {
+    estilDireccio: {
         fontSize: 18,
         marginHorizontal: 20,
     },
-    fotoView: {
+    estilImatge: {
         flex: 2,
         backgroundColor: '#ECFCFB',
     },
-    fotoTitle: {
+    estilTitol: {
         fontSize: 20,
         fontWeight: 'bold',
         marginHorizontal: 15,
         marginTop: 10,
     },
-    imgView: {
+    estilImatgevista: {
         flexDirection: "row",
         marginHorizontal: 15,
     },
-    fotoImg: {
+    imatgeEStil: {
         width: 120,
         flex: 2,
         height: 120,
